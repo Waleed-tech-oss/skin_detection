@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI-Based Facial Skin Analysis and Personalized Beauty Product Recommendation System
 
-## Getting Started
+## 1. Project Purpose
+This project is an intelligent skincare advisory application designed to provide objective facial skin analysis and personalized cosmetic product recommendations. The system differentiates between AI-detected skin characteristics (skin type, skin tone, detected concerns, confidence score) and user-provided criteria (sensitivities, allergies, exclusions, budget) to offer tailored skincare routines without making clinical or medical claims.
 
-First, run the development server:
+---
+
+## 2. Frontend Tech Stack
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS (configured with centralized theme tokens)
+- **Design System:** Soft Clinical Sage (custom variables and tokens)
+- **Icons:** Lucide React
+- **Typography:** Manrope (Headings), Inter (Body)
+- **Package Manager:** npm
+
+---
+
+## 3. How to Install
+Clone the repository and install dependencies using npm:
+
+```bash
+npm install
+```
+
+---
+
+## 4. How to Run Development Server
+Start the local Next.js development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To verify TypeScript and build correctness:
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 5. Main Folder Structure
+```
+src/
+├── app/                      # Next.js App Router routes & pages
+│   ├── page.tsx              # Landing page placeholder
+│   ├── layout.tsx            # Root layout with fonts & theme setup
+│   ├── globals.css           # Soft Clinical Sage tokens & base styles
+│   ├── login/                # Authentication - Sign In
+│   ├── register/             # Authentication - Sign Up
+│   ├── dashboard/            # Overview & user metrics
+│   ├── analysis/             # New facial image analysis
+│   ├── results/              # Detailed AI analysis results
+│   ├── questionnaire/        # User-provided preferences & sensitivities
+│   ├── skin-profile/         # Combined skin profile (My Analysis)
+│   ├── recommendations/      # Recommended products list
+│   │   └── [id]/             # Product detail & compatibility view
+│   ├── routine/              # AM / PM skincare routine plan
+│   ├── history/              # Past analysis timeline
+│   ├── profile/              # User profile & account overview
+│   └── settings/             # Application settings & privacy
+│
+├── components/               # Modular UI components
+│   ├── layout/               # AppShell, AppSidebar, Topbar, PageHeader
+│   ├── ui/                   # PrimaryButton, SecondaryButton, SectionCard, StatusBadge
+│   ├── analysis/             # Domain components (Phase 2)
+│   ├── recommendations/      # Domain components (Phase 2)
+│   ├── routine/              # Domain components (Phase 2)
+│   └── forms/                # Form components (Phase 2)
+│
+├── constants/                # Navigation routes, branding & app constants
+├── data/                     # Domain mock data (AI analysis, preferences, products)
+├── lib/                      # Helper utilities (cn, clsx, tailwind-merge)
+├── services/                 # Service layer interfaces & mock services
+└── types/                    # Domain TypeScript types & schemas
 
-To learn more about Next.js, take a look at the following resources:
+public/
+└── images/                   # Static images & assets
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 6. Current Phase 1 Status
+- **Status:** Phase 1 (Frontend Foundation) Completed.
+- **Implemented:**
+  - Standardized directory architecture and routing for all target screens.
+  - Soft Clinical Sage centralized theme system and typography.
+  - Reusable layout shell (`AppShell`, `AppSidebar`, `Topbar`, `PageHeader`) with mobile drawer support.
+  - Base UI components (`PrimaryButton`, `SecondaryButton`, `SectionCard`, `StatusBadge`).
+  - Separation of AI-generated vs. user-provided data models.
+  - Clean placeholders for all 14 routes.
+- **Note:** Backend APIs, AI model pipelines, databases, and comprehensive UI screens will be implemented in Phase 2.
