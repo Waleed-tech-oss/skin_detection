@@ -1,83 +1,85 @@
 /**
- * Core Domain Types for AI-Based Facial Skin Analysis & Recommendation System
+ * Backend-facing domain contracts.
  *
- * IMPORTANT ARCHITECTURE RULE:
- * Maintain strict separation between AI-generated data and User-provided data.
- * Avoid medical terminology (Diagnosis, Cure, Guaranteed treatment).
+ * AI-generated outputs and user-provided questionnaire data intentionally use
+ * separate types so they cannot be confused at service boundaries.
  */
 
-// ==========================================
-// 1. AI-Generated Domain Types
-// ==========================================
+export type EntityId = string;
+export type IsoDateTime = string;
+export type Confidence = number;
 
-export type SkinType = "Oily" | "Dry" | "Combination" | "Normal" | "Sensitive";
-
-export type SkinTone =
-  | "Fair"
-  | "Light"
-  | "Mid-Light"
-  | "Medium"
-  | "Medium-Deep"
-  | "Deep";
-
-export type DetectedConcernType =
+export type SkinType = "Dry" | "Normal" | "Oily";
+export type SkinTone = "Light" | "Mid-Light" | "Mid-Dark" | "Dark";
+export type PrimaryVisibleConcern =
   | "Acne"
-  | "Hyperpigmentation"
-  | "Pigmentation"
-  | "Redness"
-  | "Fine Lines"
-  | "Enlarged Pores"
+  | "Blackheads"
+  | "Dark Spots"
   | "Pores"
-  | "Dullness"
-  | "Uneven Texture"
-  | "Dry Patches"
-  | "Oiliness";
+  | "Wrinkles";
+export type ConcernSignal = "Redness" | "Pigmentation";
+export type DetectedConcernType = PrimaryVisibleConcern | ConcernSignal;
+
+export interface SkinTypeResult {
+  skinType: SkinType;
+  skinTypeConfidence: Confidence;
+}
+
+export interface SkinToneResult {
+  skinTone: SkinTone;
+  skinToneConfidence: Confidence;
+}
 
 export interface DetectedConcern {
   concern: DetectedConcernType;
-  confidence: number; // 0 to 100 percentage
-  region?: string; // e.g. "T-Zone", "Cheeks", "Forehead"
+  confidence: Confidence;
+  region?: string;
 }
 
-export interface AIAnalysisResult {
-  id: string;
-  createdAt: string;
-  skinType: SkinType;
-  skinTypeConfidence?: number; // e.g. 87 (%)
-  skinTone: SkinTone;
-  skinToneConfidence?: number; // e.g. 90 (%)
-  primaryConcern: DetectedConcernType;
-  primaryConcernConfidence?: number; // e.g. 94 (%)
+export interface ConcernResult {
+  primaryConcern: PrimaryVisibleConcern;
+  primaryConcernConfidence: Confidence;
   detectedConcerns: DetectedConcern[];
-  aiConfidence: number; // overall model confidence e.g. 87 (%)
+}
+
+export interface SkinAnalysis
+  extends SkinTypeResult,
+    SkinToneResult,
+    ConcernResult {
+  id: EntityId;
+  userId?: EntityId;
+  createdAt: IsoDateTime;
+  aiConfidence: Confidence;
   analysisSummary?: string;
   imageUrl?: string;
 }
 
-// ==========================================
-// 2. User-Provided Information Types
-// ==========================================
+export type SensitivityLevel = "Low" | "Medium" | "High" | "Not Sure";
+export type BudgetRange =
+  | "Under PKR 2,000"
+  | "PKR 2,000-5,000"
+  | "PKR 5,000-10,000"
+  | "PKR 10,000+"
+  | "No specific budget";
 
-export type SensitivityLevel = "Low" | "Medium" | "High";
-
-export type BudgetRange = "Budget" | "Mid-Range" | "Premium" | "Luxury";
-
-export interface UserPreferences {
+export interface QuestionnaireProfile {
   sensitivityLevel: SensitivityLevel;
   allergies: string[];
   ingredientsToAvoid: string[];
   budget: BudgetRange;
   preferredProductTypes: string[];
-  lifestyleFactors?: {
-    sunExposure?: "Low" | "Moderate" | "High";
-    sleepHours?: number;
-    stressLevel?: "Low" | "Moderate" | "High";
-  };
+  currentRoutine?: string[];
+  fragrancePreference?: string;
+  texturePreference?: string;
 }
 
-// ==========================================
-// 3. Skincare Product & Recommendation Types
-// ==========================================
+export interface UserProfile {
+  id: EntityId;
+  name: string;
+  email: string;
+  createdAt: IsoDateTime;
+  questionnaire?: QuestionnaireProfile;
+}
 
 export type ProductCategory =
   | "Cleanser"
@@ -89,39 +91,68 @@ export type ProductCategory =
   | "Eye Cream"
   | "Mask";
 
-export interface SkincareProduct {
-  id: string;
+export interface Product {
+  id: EntityId;
   name: string;
-  brand: string;
   category: ProductCategory;
-  description: string;
+  brand?: string;
+  description?: string;
   price?: number;
-  compatibilityScore: number; // e.g. 92 (%)
-  targetConcerns: DetectedConcernType[];
   keyIngredients: string[];
-  imageUrl?: string;
   suitableForSkinTypes: SkinType[];
+  targetConcerns: DetectedConcernType[];
+  catalogStatus?: "placeholder" | "verified";
 }
 
-export interface RecommendationSummary {
-  id: string;
-  analysisId: string;
-  generatedAt: string;
-  products: SkincareProduct[];
-  morningRoutine: SkincareProduct[];
-  eveningRoutine: SkincareProduct[];
+export interface ProductRecommendation extends Product {
+  recommendationId: EntityId;
+  analysisId: EntityId;
+  compatibilityScore: number;
+  rationale?: {
+    skinType?: string;
+    concern?: string;
+    sensitivity?: string;
+    exclusions?: string;
+    budget?: string;
+  };
+  preferencesConsidered?: string[];
+  isBestMatch?: boolean;
 }
 
-// ==========================================
-// 4. User Profile & Application State Types
-// ==========================================
+export type RoutinePeriod = "morning" | "evening";
+export type RoutineStepName =
+  | "Cleanse"
+  | "Treat"
+  | "Hydrate"
+  | "Protect"
+  | "Moisturize";
 
-export interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-  preferences?: UserPreferences;
+export interface RoutineStep {
+  id: EntityId;
+  order: number;
+  name: RoutineStepName;
+  category: ProductCategory;
+  period: RoutinePeriod;
+  product?: ProductRecommendation;
+  recommendationReason?: string;
+}
+
+export interface Routine {
+  id: EntityId;
+  analysisId: EntityId;
+  generatedAt: IsoDateTime;
+  morning: RoutineStep[];
+  evening: RoutineStep[];
+}
+
+export interface AnalysisHistoryItem {
+  id: EntityId;
+  createdAt: IsoDateTime;
+  skinType: SkinType;
+  skinTone: SkinTone;
+  primaryConcern: PrimaryVisibleConcern;
+  aiConfidence: Confidence;
+  detectedConcerns: DetectedConcern[];
 }
 
 export interface NavigationItem {
@@ -130,3 +161,8 @@ export interface NavigationItem {
   iconName: string;
   badge?: string;
 }
+
+// Temporary compatibility aliases while screens move from fixtures to services.
+export type AIAnalysisResult = SkinAnalysis;
+export type UserPreferences = QuestionnaireProfile;
+export type SkincareProduct = ProductRecommendation;

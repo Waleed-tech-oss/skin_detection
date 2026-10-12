@@ -52,11 +52,6 @@ export default function ProfilePage() {
       <PageHeader
         title="My Profile"
         description="Manage your account details and personalization preferences."
-        badge={
-          <StatusBadge variant="success" dot>
-            Verified Account
-          </StatusBadge>
-        }
         action={
           editMode ? (
             <div className="flex items-center gap-2">
@@ -90,7 +85,7 @@ export default function ProfilePage() {
       {saved && (
         <div className="flex items-center gap-2 p-3.5 bg-[#EEF7F2] border border-[#CBE5D6] rounded-[14px] text-sm text-success font-medium">
           <ShieldCheck className="w-4 h-4 shrink-0" />
-          Profile updated successfully.
+          Profile changes are shown locally and are ready to be wired to the auth service.
         </div>
       )}
 
@@ -120,8 +115,8 @@ export default function ProfilePage() {
                 <p className="text-xs text-secondary-text">{MOCK_USER_PROFILE.email}</p>
               </div>
 
-              <StatusBadge variant="sage" size="sm">
-                Verified Account
+              <StatusBadge variant="neutral" size="sm">
+                User Profile
               </StatusBadge>
             </div>
           </SectionCard>
@@ -212,7 +207,7 @@ export default function ProfilePage() {
                   </div>
                   {editMode && (
                     <p className="mt-1 text-[11px] text-secondary-text">
-                      Email address cannot be changed in demo mode.
+                      Email changes will be managed by the authentication service.
                     </p>
                   )}
                 </div>
@@ -272,7 +267,7 @@ export default function ProfilePage() {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-very-light-sage/60 border border-light-sage text-xs text-dark-sage">
                 <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-warning" />
                 <span>
-                  <strong>Demo mode:</strong> Password changes are not persisted. This form is for UI demonstration only.
+                  Password management will be available when authentication is connected.
                 </span>
               </div>
 

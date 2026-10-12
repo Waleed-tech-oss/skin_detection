@@ -7,15 +7,11 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 import { ConfidenceBar } from "@/components/analysis/ConfidenceBar";
 import { MOCK_AI_ANALYSIS } from "@/data/mockData";
 import {
-  ScanFace,
   Sparkles,
   ArrowRight,
-  CheckCircle2,
-  HelpCircle,
   RotateCcw,
   Check,
   Shield,
@@ -147,7 +143,7 @@ export default function ResultsPage() {
               <div className="p-4 rounded-xl bg-very-light-sage/40 border border-light-sage/70 flex flex-col justify-between space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-semibold text-secondary-text uppercase tracking-wider">
-                    Primary Concern
+                    Primary Visible Concern
                   </span>
                   <Eye className="w-3.5 h-3.5 text-primary-sage" />
                 </div>
@@ -168,7 +164,7 @@ export default function ResultsPage() {
             <div className="mt-4 p-3 bg-surface rounded-xl border border-sage-border text-xs text-secondary-text flex items-center gap-2">
               <Shield className="w-4 h-4 text-primary-sage shrink-0" />
               <span>
-                <strong>Acne</strong> detected as the primary concern. Redness and Pigmentation are additional AI-detected signals.
+                <strong>Acne</strong> is the Primary Visible Concern. Redness and Pigmentation are separate AI-detected signals.
               </span>
             </div>
           </SectionCard>
@@ -190,7 +186,7 @@ export default function ResultsPage() {
               ))}
 
               <div className="pt-2 text-[11px] text-secondary-text leading-relaxed">
-                * Percentages represent model confidence outputs for visible surface characteristics and do not represent disease diagnosis or severity.
+                * Percentages are AI Confidence outputs for visible surface characteristics, not medical severity measures.
               </div>
             </div>
           </SectionCard>

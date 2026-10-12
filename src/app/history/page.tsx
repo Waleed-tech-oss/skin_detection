@@ -85,7 +85,7 @@ export default function HistoryPage() {
 
         <div className="bg-surface rounded-[16px] border border-sage-border p-4 space-y-1 col-span-2 sm:col-span-1">
           <span className="text-[11px] font-semibold text-secondary-text uppercase tracking-wider">
-            Primary Concern
+            Primary Visible Concern
           </span>
           <div className="flex items-end gap-1.5">
             <span className="text-2xl font-bold text-primary-text font-heading">

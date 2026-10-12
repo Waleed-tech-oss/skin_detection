@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [submissionMessage, setSubmissionMessage] = useState("");
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -56,7 +57,7 @@ export default function RegisterPage() {
         </div>
 
         <p className="text-white/40 text-xs">
-          © {new Date().getFullYear()} {APP_CONFIG.name}. Frontend UI — no data is stored.
+          © {new Date().getFullYear()} {APP_CONFIG.name}.
         </p>
       </div>
 
@@ -84,16 +85,16 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Demo notice */}
-          <div className="flex items-start gap-3 p-3.5 rounded-[14px] bg-very-light-sage border border-light-sage text-xs text-dark-sage">
-            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-primary-sage" />
-            <span>
-              <strong>Demo mode:</strong> Fill in the form, then click Create Account to proceed directly to your dashboard.
-            </span>
-          </div>
-
           {/* Register Form */}
-          <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="space-y-5"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSubmissionMessage(
+                "Account creation will be available when the authentication adapter is connected.",
+              );
+            }}
+          >
             {/* Full Name */}
             <div className="space-y-1.5">
               <label
@@ -220,12 +221,13 @@ export default function RegisterPage() {
 
             {/* Terms note */}
             <p className="text-xs text-secondary-text leading-relaxed">
-              By creating an account you acknowledge this is a demonstration system. No personal data is collected or stored.
+              By creating an account, you agree to the application terms and privacy policy when they become available.
             </p>
 
             {/* Submit */}
-            <Link href="/dashboard" className="block pt-1">
+            <div className="pt-1">
               <PrimaryButton
+                type="submit"
                 fullWidth
                 icon={<ArrowRight className="w-4 h-4" />}
                 iconPosition="right"
@@ -233,7 +235,12 @@ export default function RegisterPage() {
               >
                 Create Account
               </PrimaryButton>
-            </Link>
+            </div>
+            {submissionMessage && (
+              <p className="text-xs text-secondary-text" role="status">
+                {submissionMessage}
+              </p>
+            )}
           </form>
 
           {/* Footer */}

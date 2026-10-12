@@ -4,21 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { SectionCard } from "@/components/ui/SectionCard";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { MOCK_RECOMMENDED_PRODUCTS, ExtendedProduct } from "@/data/mockData";
-import {
-  Sparkles,
-  ArrowRight,
-  Filter,
-  CheckCircle2,
-  Droplets,
-  Layers,
-  ShieldCheck,
-  Check,
-} from "lucide-react";
+import { MOCK_RECOMMENDED_PRODUCTS } from "@/data/mockData";
+import { Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
 
 export default function RecommendationsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -42,7 +32,7 @@ export default function RecommendationsPage() {
       {/* 1. Page Header */}
       <PageHeader
         title="Recommended For You"
-        description="Curated cosmetic product formulations ranked by ingredient compatibility score with your AI skin profile."
+        description="Sample catalog records ranked by an illustrative Compatibility Score for your AI Analysis and questionnaire profile."
         action={
           <Link href="/routine">
             <PrimaryButton icon={<Sparkles className="w-4 h-4" />}>
@@ -65,7 +55,7 @@ export default function RecommendationsPage() {
             Acne Concern
           </StatusBadge>
           <StatusBadge variant="beige" size="sm">
-            Sensitive Skin
+            Medium Sensitivity
           </StatusBadge>
           <StatusBadge variant="neutral" size="sm">
             PKR 2k–5k Budget
@@ -91,7 +81,7 @@ export default function RecommendationsPage() {
                   Top Overall Match
                 </StatusBadge>
                 <span className="text-xs text-secondary-text">
-                  Highest active ingredient alignment
+                  Highest illustrative catalog match
                 </span>
               </div>
 
@@ -108,11 +98,9 @@ export default function RecommendationsPage() {
               </div>
 
               <div className="flex flex-wrap gap-1.5 pt-1">
-                {bestMatchProduct.keyIngredients.map((ing) => (
-                  <StatusBadge key={ing} variant="neutral" size="sm">
-                    {ing}
-                  </StatusBadge>
-                ))}
+                <StatusBadge variant="neutral" size="sm">
+                  Ingredient data pending catalog integration
+                </StatusBadge>
               </div>
             </div>
 
@@ -123,7 +111,7 @@ export default function RecommendationsPage() {
                   Compatibility Score
                 </span>
                 <span className="text-2xl sm:text-3xl font-bold text-success font-heading">
-                  {bestMatchProduct.compatibilityScore}% Match
+                  {bestMatchProduct.compatibilityScore}%
                 </span>
                 <span className="text-sm font-semibold text-primary-text block mt-0.5">
                   PKR {bestMatchProduct.price?.toLocaleString()}
@@ -170,7 +158,7 @@ export default function RecommendationsPage() {
           <span className="text-xs font-semibold text-secondary-text uppercase tracking-wider shrink-0">
             Concern:
           </span>
-          {["All", "Acne", "Redness", "Oiliness"].map((con) => (
+          {["All", "Acne", "Redness", "Pigmentation"].map((con) => (
             <button
               key={con}
               type="button"
@@ -200,7 +188,7 @@ export default function RecommendationsPage() {
                   {product.category}
                 </span>
                 <StatusBadge variant="success" size="sm">
-                  {product.compatibilityScore}% Match
+                  {product.compatibilityScore}% Compatibility
                 </StatusBadge>
               </div>
 
@@ -218,18 +206,16 @@ export default function RecommendationsPage() {
               </p>
 
               <div className="flex flex-wrap gap-1.5 pt-1">
-                {product.keyIngredients.slice(0, 2).map((ing) => (
-                  <StatusBadge key={ing} variant="sage" size="sm">
-                    {ing}
-                  </StatusBadge>
-                ))}
+                <StatusBadge variant="sage" size="sm">
+                  Placeholder catalog record
+                </StatusBadge>
               </div>
             </div>
 
             <div className="pt-3 border-t border-sage-border/60 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase font-semibold text-secondary-text block">
-                  Price
+                  Placeholder Price
                 </span>
                 <span className="text-sm font-bold text-primary-text">
                   PKR {product.price?.toLocaleString()}
@@ -254,9 +240,9 @@ export default function RecommendationsPage() {
       <div className="p-4 bg-surface rounded-2xl border border-sage-border text-xs text-secondary-text flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <span className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-primary-sage shrink-0" />
-          Compatibility scores reflect ingredient suitability for your profile, not treatment guarantees.
+          Compatibility Scores shown here are illustrative until verified product catalog data is connected.
         </span>
-        <span className="text-secondary-text/70">Demo Prototype Matches</span>
+        <span className="text-secondary-text/70">Sample catalog data</span>
       </div>
     </AppShell>
   );

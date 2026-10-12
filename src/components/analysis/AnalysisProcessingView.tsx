@@ -7,7 +7,6 @@ import {
   Loader2,
   Circle,
   ScanFace,
-  Sparkles,
   ArrowRight,
 } from "lucide-react";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
@@ -34,7 +33,7 @@ export function AnalysisProcessingView({
 }: AnalysisProcessingViewProps) {
   const router = useRouter();
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
+  const isFinished = currentStageIndex >= ANALYSIS_STAGES.length;
 
   useEffect(() => {
     // Stage interval sequencer
@@ -44,7 +43,6 @@ export function AnalysisProcessingView({
       }, 700);
       return () => clearTimeout(timer);
     } else {
-      setIsFinished(true);
       if (onComplete) {
         onComplete();
       }

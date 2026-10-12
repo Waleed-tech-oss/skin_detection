@@ -24,7 +24,7 @@ export function RecommendationPreviewCard({
           </span>
           <StatusBadge variant="success" size="sm">
             <Sparkles className="w-3 h-3 mr-1 inline text-success" />
-            {product.compatibilityScore}% Match
+            {product.compatibilityScore}% Compatibility
           </StatusBadge>
         </div>
 
@@ -43,7 +43,7 @@ export function RecommendationPreviewCard({
       <div className="pt-3 border-t border-sage-border/60 flex items-center justify-between">
         <div>
           <span className="text-[10px] uppercase font-semibold text-secondary-text block">
-            Price Est.
+            Placeholder Price
           </span>
           <span className="text-xs sm:text-sm font-bold text-primary-text">
             {formattedPrice}

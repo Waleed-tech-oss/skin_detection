@@ -21,12 +21,12 @@ export function AppShell({ children, pageTitle }: AppShellProps) {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 md:pl-64 flex flex-col min-w-0">
+      <div className="flex min-w-0 flex-1 flex-col md:pl-64">
         <Topbar
           onMenuToggle={() => setSidebarOpen((prev) => !prev)}
           title={pageTitle}
         />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+        <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8 lg:px-8">
           {children}
         </main>
       </div>

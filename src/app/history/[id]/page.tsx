@@ -208,7 +208,7 @@ export default async function HistoryDetailPage({ params }: PageProps) {
               <div className="p-4 rounded-xl bg-very-light-sage/40 border border-light-sage/70 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-semibold text-secondary-text uppercase tracking-wider">
-                    Primary Concern
+                    Primary Visible Concern
                   </span>
                   <Eye className="w-3.5 h-3.5 text-primary-sage" />
                 </div>
@@ -234,7 +234,7 @@ export default async function HistoryDetailPage({ params }: PageProps) {
                 />
               ))}
               <p className="text-[11px] text-secondary-text leading-relaxed pt-1">
-                * Percentages represent model confidence outputs for visible surface characteristics and do not represent disease diagnosis or severity.
+                * Percentages are AI Confidence outputs for visible surface characteristics, not medical severity measures.
               </p>
             </div>
           </SectionCard>

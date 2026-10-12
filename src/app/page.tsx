@@ -275,7 +275,7 @@ export default function HomePage() {
             </h2>
             <p className="text-sm sm:text-base text-secondary-text">
               Objective visual assessments structured across three primary
-              dimensions without making clinical diagnostic claims.
+              dimensions for cosmetic guidance without medical classification claims.
             </p>
           </div>
 
@@ -295,7 +295,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p className="text-xs text-secondary-text leading-relaxed">
-                Determines overall epidermal hydration and oiliness patterns.
+                Classifies the visible skin type as Dry, Normal, or Oily.
               </p>
               <div className="flex flex-wrap gap-2 pt-2">
                 <StatusBadge variant="sage" size="md">
@@ -320,11 +320,11 @@ export default function HomePage() {
                   <h3 className="text-base font-bold text-primary-text font-heading">
                     Skin Tone
                   </h3>
-                  <p className="text-xs text-secondary-text">Melanin & tone classification</p>
+                  <p className="text-xs text-secondary-text">Visible tone classification</p>
                 </div>
               </div>
               <p className="text-xs text-secondary-text leading-relaxed">
-                Guides sunscreen filter types and hyperpigmentation product sensitivity.
+                Classifies visible tone using the four labels supported by the model.
               </p>
               <div className="flex flex-wrap gap-2 pt-2">
                 <StatusBadge variant="beige" size="md">
@@ -352,7 +352,7 @@ export default function HomePage() {
                   <h3 className="text-base font-bold text-primary-text font-heading">
                     Visible Concerns
                   </h3>
-                  <p className="text-xs text-secondary-text">Surface area anomalies</p>
+                  <p className="text-xs text-secondary-text">Visible surface characteristics</p>
                 </div>
               </div>
               <p className="text-xs text-secondary-text leading-relaxed">
@@ -546,8 +546,8 @@ export default function HomePage() {
                 Transparent Match Reasons
               </h3>
               <p className="text-xs sm:text-sm text-secondary-text leading-relaxed">
-                Every recommended product explicitly lists which active
-                ingredients match your specific skin characteristics.
+                Each match explains which AI Analysis and questionnaire inputs
+                contributed to its Compatibility Score.
               </p>
             </div>
 
@@ -556,11 +556,11 @@ export default function HomePage() {
                 <Lock className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-primary-text font-heading">
-                User-Controlled Privacy
+                Clear Data Boundaries
               </h3>
               <p className="text-xs sm:text-sm text-secondary-text leading-relaxed">
-                Your photos and preferences are strictly used for your session
-                and profile matching without third-party ad profiling.
+                AI-generated outputs remain separate from user-provided
+                sensitivities, allergies, exclusions, and budget preferences.
               </p>
             </div>
           </div>
@@ -568,7 +568,7 @@ export default function HomePage() {
           {/* Subtle Disclaimer Banner */}
           <div className="p-4 rounded-xl bg-very-light-sage/60 border border-light-sage/70 max-w-3xl mx-auto text-center">
             <p className="text-xs text-secondary-text leading-relaxed">
-              <strong className="text-dark-sage">Notice:</strong> {APP_CONFIG.shortName} provides skincare analysis and recommendation support and is not a medical diagnosis. For clinical skin diseases or medical conditions, always consult a board-certified dermatologist.
+              <strong className="text-dark-sage">Notice:</strong> {APP_CONFIG.shortName} provides cosmetic skincare analysis and recommendation support, not medical advice. Consult a qualified clinician for medical concerns.
             </p>
           </div>
         </div>
@@ -613,23 +613,8 @@ export default function HomePage() {
             </span>
           </div>
 
-          <nav className="flex items-center gap-6 text-xs font-medium">
-            <a href="#about" className="hover:text-primary-text transition-colors">
-              About
-            </a>
-            <a href="#about" className="hover:text-primary-text transition-colors">
-              Privacy
-            </a>
-            <a href="#about" className="hover:text-primary-text transition-colors">
-              Terms
-            </a>
-            <a href="#about" className="hover:text-primary-text transition-colors">
-              Contact
-            </a>
-          </nav>
-
           <p className="text-[11px] text-secondary-text text-center md:text-right max-w-xs">
-            For skincare guidance and educational purposes. Not a medical diagnosis.
+            For cosmetic skincare guidance and educational purposes. Not medical advice.
           </p>
         </div>
       </footer>

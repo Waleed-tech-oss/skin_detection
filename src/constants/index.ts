@@ -5,7 +5,7 @@ export const APP_CONFIG = {
   description:
     "AI-Based Facial Skin Analysis and Personalized Beauty Product Recommendation System",
   version: "0.1.0",
-  phase: "Phase 1 - Frontend Foundation",
+  phase: "Frontend integration readiness",
 };
 
 export interface NavRoute {

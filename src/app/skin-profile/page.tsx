@@ -11,18 +11,12 @@ import {
   MOCK_USER_PREFERENCES,
 } from "@/data/mockData";
 import {
-  ScanFace,
   Sparkles,
   ArrowRight,
   Sliders,
-  Shield,
   Layers,
   Sun,
   Eye,
-  CheckCircle2,
-  DollarSign,
-  Ban,
-  Droplets,
   RotateCcw,
 } from "lucide-react";
 
@@ -106,7 +100,7 @@ export default function SkinProfilePage() {
                 <div className="p-3.5 rounded-xl bg-very-light-sage/40 border border-light-sage/70 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-semibold text-secondary-text uppercase tracking-wider">
-                      Primary Concern
+                      Primary Visible Concern
                     </span>
                     <Eye className="w-3.5 h-3.5 text-primary-sage" />
                   </div>

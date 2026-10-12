@@ -5,10 +5,9 @@ import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SectionCard } from "@/components/ui/SectionCard";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { MOCK_FULL_ROUTINE, DetailedRoutineStep } from "@/data/mockData";
+import { MOCK_FULL_ROUTINE } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import {
   Sun,
@@ -16,12 +15,7 @@ import {
   Sparkles,
   ArrowRight,
   Check,
-  RefreshCw,
-  Clock,
-  ShieldCheck,
-  CheckCircle2,
   CalendarCheck,
-  DollarSign,
 } from "lucide-react";
 
 export default function RoutinePage() {
@@ -143,7 +137,7 @@ export default function RoutinePage() {
                         PKR {step.product.price?.toLocaleString()}
                       </span>
                       <span className="text-[11px] text-success block font-semibold">
-                        {step.product.compatibilityScore}% Match
+                        {step.product.compatibilityScore}% Compatibility
                       </span>
                     </div>
                   </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Sun, ArrowRight, CheckCircle } from "lucide-react";
+import { Sun, ArrowRight } from "lucide-react";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { RoutineStepPreview } from "@/data/mockData";
 

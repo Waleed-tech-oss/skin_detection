@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { Menu, Sparkles, User as UserIcon } from "lucide-react";
-import { StatusBadge } from "@/components/ui/StatusBadge";
+import { Menu, User as UserIcon } from "lucide-react";
 import { APP_CONFIG } from "@/constants";
 
 interface TopbarProps {
@@ -12,9 +11,9 @@ interface TopbarProps {
 
 export function Topbar({ onMenuToggle, title }: TopbarProps) {
   return (
-    <header className="sticky top-0 z-20 bg-surface/90 backdrop-blur-xs border-b border-sage-border px-4 sm:px-6 py-3.5 flex items-center justify-between">
+    <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-sage-border bg-surface/90 px-4 py-3.5 backdrop-blur-xs sm:px-6">
       {/* Left: Mobile Hamburger & Current Page / Breadcrumb */}
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"
           onClick={onMenuToggle}
@@ -24,7 +23,7 @@ export function Topbar({ onMenuToggle, title }: TopbarProps) {
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-2">
           <span className="text-xs sm:text-sm font-medium text-secondary-text hidden sm:inline-block">
             {APP_CONFIG.shortName}
           </span>

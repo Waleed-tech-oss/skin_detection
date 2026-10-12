@@ -7,21 +7,8 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 import { cn } from "@/lib/utils";
-import {
-  Sparkles,
-  ArrowRight,
-  ArrowLeft,
-  CheckCircle2,
-  ShieldCheck,
-  Check,
-  User,
-  Sliders,
-  DollarSign,
-  HeartHandshake,
-  Layers,
-} from "lucide-react";
+import { ArrowRight, ArrowLeft, ShieldCheck, Check } from "lucide-react";
 
 interface QuestionnaireState {
   sensitivity: string;

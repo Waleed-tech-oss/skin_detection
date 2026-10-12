@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, ArrowLeft, Mail, CheckCircle2, Send } from "lucide-react";
+import { ShieldCheck, ArrowLeft, Mail, Info, Send } from "lucide-react";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { APP_CONFIG } from "@/constants";
 import { cn } from "@/lib/utils";
 
-type Step = "email" | "sent";
+type Step = "email" | "unavailable";
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<Step>("email");
@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep("sent");
+    setStep("unavailable");
   };
 
   return (
@@ -47,14 +47,6 @@ export default function ForgotPasswordPage() {
               <p className="text-sm text-secondary-text leading-relaxed">
                 Enter your account email address and we&apos;ll send you a link to reset your password.
               </p>
-            </div>
-
-            {/* Demo notice */}
-            <div className="flex items-start gap-3 p-3 rounded-[12px] bg-very-light-sage border border-light-sage text-xs text-dark-sage">
-              <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-primary-sage" />
-              <span>
-                <strong>Demo mode:</strong> No email will actually be sent. Click &ldquo;Send Reset Link&rdquo; to see the confirmation state.
-              </span>
             </div>
 
             {/* Form */}
@@ -107,31 +99,27 @@ export default function ForgotPasswordPage() {
             </div>
           </div>
         ) : (
-          /* Success / sent state */
+          /* Integration-pending state */
           <div className="bg-surface rounded-[18px] border border-sage-border shadow-[0_1px_3px_0_rgba(0,0,0,0.03)] p-8 space-y-6 text-center">
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-full bg-[#EEF7F2] border border-[#CBE5D6] flex items-center justify-center">
-                <CheckCircle2 className="w-8 h-8 text-success" />
+                <Info className="w-8 h-8 text-primary-sage" />
               </div>
             </div>
 
             <div className="space-y-2">
               <h1 className="text-xl font-bold tracking-tight text-primary-text font-heading">
-                Check your inbox
+                Reset service not connected
               </h1>
               <p className="text-sm text-secondary-text leading-relaxed">
-                A password reset link has been sent to{" "}
-                <span className="font-semibold text-primary-text">
-                  {email || "your email address"}
-                </span>
-                . The link will expire in 30 minutes.
+                Password reset emails will be available after the authentication adapter is connected.
               </p>
             </div>
 
             <div className="space-y-3 pt-2">
               <Link href="/login" className="block">
                 <PrimaryButton fullWidth className="py-2.5">
-                  Return to Sign In
+                  Back to Sign In
                 </PrimaryButton>
               </Link>
               <SecondaryButton
@@ -139,13 +127,10 @@ export default function ForgotPasswordPage() {
                 className="py-2.5 text-sm"
                 onClick={() => setStep("email")}
               >
-                Resend Link
+                Try Another Email
               </SecondaryButton>
             </div>
 
-            <p className="text-xs text-secondary-text">
-              Didn&apos;t receive an email? Check your spam folder or try a different email address.
-            </p>
           </div>
         )}
       </div>

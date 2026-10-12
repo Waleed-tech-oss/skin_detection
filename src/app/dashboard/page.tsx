@@ -13,17 +13,12 @@ import {
   MOCK_RECOMMENDED_PRODUCTS,
   MOCK_MORNING_ROUTINE,
   MOCK_USER_PROFILE,
-  MOCK_USER_PREFERENCES,
 } from "@/data/mockData";
 import {
   ScanFace,
   ArrowRight,
   Sparkles,
   Calendar,
-  Layers,
-  Sliders,
-  ShieldAlert,
-  Sparkle,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -91,7 +86,7 @@ export default function DashboardPage() {
 
             <div className="p-3.5 rounded-xl bg-very-light-sage/40 border border-light-sage/60">
               <span className="text-[10px] font-semibold text-secondary-text uppercase block">
-                Primary Concern
+                Primary Visible Concern
               </span>
               <span className="text-base font-bold text-primary-sage block mt-0.5">
                 {MOCK_AI_ANALYSIS.primaryConcern}
@@ -118,14 +113,15 @@ export default function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-sage-border/60">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-semibold text-secondary-text mr-1">
-                Additional Concerns:
+                Detected Signals:
               </span>
-              <StatusBadge variant="beige" size="sm">
-                Pores (78%)
-              </StatusBadge>
-              <StatusBadge variant="beige" size="sm">
-                Redness (64%)
-              </StatusBadge>
+              {MOCK_AI_ANALYSIS.detectedConcerns
+                .filter((item) => item.concern !== MOCK_AI_ANALYSIS.primaryConcern)
+                .map((item) => (
+                  <StatusBadge key={item.concern} variant="beige" size="sm">
+                    {item.concern} ({item.confidence}%)
+                  </StatusBadge>
+                ))}
             </div>
 
             <Link href="/results">
@@ -191,18 +187,19 @@ export default function DashboardPage() {
           </div>
 
           <div className="space-y-2 pt-1">
-            <div className="flex items-center justify-between p-2 rounded-lg bg-very-light-sage/40 text-xs">
-              <span className="font-semibold text-primary-text">Acne</span>
-              <span className="text-primary-sage font-bold">87% Confidence</span>
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-very-light-sage/40 text-xs">
-              <span className="font-semibold text-primary-text">Enlarged Pores</span>
-              <span className="text-primary-sage font-bold">78% Confidence</span>
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-very-light-sage/40 text-xs">
-              <span className="font-semibold text-primary-text">Surface Redness</span>
-              <span className="text-primary-sage font-bold">64% Confidence</span>
-            </div>
+            {MOCK_AI_ANALYSIS.detectedConcerns.map((item) => (
+              <div
+                key={item.concern}
+                className="flex items-center justify-between rounded-lg bg-very-light-sage/40 p-2 text-xs"
+              >
+                <span className="font-semibold text-primary-text">
+                  {item.concern}
+                </span>
+                <span className="font-bold text-primary-sage">
+                  {item.confidence}% AI Confidence
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -227,7 +224,7 @@ export default function DashboardPage() {
 
           <div className="space-y-2 pt-1 text-xs">
             <div className="flex items-center justify-between p-2 rounded-lg bg-[#F7F2EB]/70 border border-warm-beige/60">
-              <span className="text-secondary-text">Sensitive Skin</span>
+              <span className="text-secondary-text">Sensitivity</span>
               <span className="font-semibold text-primary-text">Medium Level</span>
             </div>
             <div className="flex items-center justify-between p-2 rounded-lg bg-[#F7F2EB]/70 border border-warm-beige/60">
@@ -294,7 +291,7 @@ export default function DashboardPage() {
                   Top Recommendations
                 </h2>
                 <p className="text-xs text-secondary-text">
-                  Prototype compatibility matches for oily & acne-prone profile
+                  Illustrative matches using placeholder catalog records
                 </p>
               </div>
             </div>
@@ -310,7 +307,7 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          {/* 3 Prototype Recommendation Cards with PKR pricing */}
+          {/* Recommendation preview cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {MOCK_RECOMMENDED_PRODUCTS.slice(0, 3).map((product) => (
               <RecommendationPreviewCard

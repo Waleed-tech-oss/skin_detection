@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  User,
-  Sun,
-  Eye,
-  Camera,
-  Users,
-  Maximize2,
-  Sparkles,
-  Shield,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
+import { Shield, CheckCircle2, XCircle } from "lucide-react";
 import { SectionCard } from "@/components/ui/SectionCard";
 
 export function PhotoGuidelinesCard() {
