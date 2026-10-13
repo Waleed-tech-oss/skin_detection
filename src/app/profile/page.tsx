@@ -8,7 +8,9 @@ import { SectionCard } from "@/components/ui/SectionCard";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { MOCK_USER_PROFILE } from "@/data/mockData";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { authService } from "@/services/auth";
+import { getAuthErrorMessage } from "@/lib/auth-errors";
 import {
   User,
   Mail,
@@ -27,18 +29,64 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
+  const { user, loading, refreshUser } = useAuth();
   const [editMode, setEditMode] = useState(false);
-  const [name, setName] = useState(MOCK_USER_PROFILE.name);
-  const [email] = useState(MOCK_USER_PROFILE.email);
+  const [nameDraft, setNameDraft] = useState<string | null>(null);
   const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [updatingPassword, setUpdatingPassword] = useState(false);
 
-  const handleSave = () => {
-    setEditMode(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const name = nameDraft ?? user?.name ?? "";
+
+  const handleSave = async () => {
+    setSaving(true);
+    setProfileError("");
+    try {
+      await authService.updateProfile({ name });
+      await refreshUser();
+      setNameDraft(null);
+      setEditMode(false);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (error) {
+      setProfileError(getAuthErrorMessage(error));
+    } finally {
+      setSaving(false);
+    }
   };
+
+  const handlePasswordChange = async () => {
+    setPasswordMessage("");
+    setPasswordError(false);
+    if (newPassword.length < 8) {
+      setPasswordMessage("New password must be at least 8 characters.");
+      setPasswordError(true);
+      return;
+    }
+    setUpdatingPassword(true);
+    try {
+      await authService.changePassword(currentPassword, newPassword);
+      setCurrentPassword("");
+      setNewPassword("");
+      setPasswordMessage("Password updated successfully.");
+    } catch (error) {
+      setPasswordMessage(getAuthErrorMessage(error));
+      setPasswordError(true);
+    } finally {
+      setUpdatingPassword(false);
+    }
+  };
+
+  const memberSince = user?.createdAt
+    ? new Intl.DateTimeFormat("en", { month: "short", year: "numeric" }).format(new Date(user.createdAt))
+    : "—";
 
   const initials = name
     .split(" ")
@@ -57,7 +105,7 @@ export default function ProfilePage() {
             <div className="flex items-center gap-2">
               <SecondaryButton
                 className="text-sm"
-                onClick={() => { setEditMode(false); setName(MOCK_USER_PROFILE.name); }}
+                onClick={() => { setEditMode(false); setNameDraft(null); }}
               >
                 Cancel
               </SecondaryButton>
@@ -65,8 +113,9 @@ export default function ProfilePage() {
                 icon={<Save className="w-4 h-4" />}
                 className="text-sm"
                 onClick={handleSave}
+                disabled={saving}
               >
-                Save Changes
+                {saving ? "Saving…" : "Save Changes"}
               </PrimaryButton>
             </div>
           ) : (
@@ -85,7 +134,13 @@ export default function ProfilePage() {
       {saved && (
         <div className="flex items-center gap-2 p-3.5 bg-[#EEF7F2] border border-[#CBE5D6] rounded-[14px] text-sm text-success font-medium">
           <ShieldCheck className="w-4 h-4 shrink-0" />
-          Profile changes are shown locally and are ready to be wired to the auth service.
+          Profile changes were saved to your authenticated account.
+        </div>
+      )}
+      {profileError && (
+        <div className="flex items-center gap-2 p-3.5 bg-[#FEF2F2] border border-[#FECACA] rounded-[14px] text-sm text-[#B91C1C] font-medium" role="alert">
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+          {profileError}
         </div>
       )}
 
@@ -112,7 +167,7 @@ export default function ProfilePage() {
 
               <div className="space-y-0.5">
                 <h2 className="text-lg font-bold text-primary-text font-heading">{name}</h2>
-                <p className="text-xs text-secondary-text">{MOCK_USER_PROFILE.email}</p>
+                <p className="text-xs text-secondary-text">{loading ? "Loading…" : user?.email}</p>
               </div>
 
               <StatusBadge variant="neutral" size="sm">
@@ -145,7 +200,7 @@ export default function ProfilePage() {
                   <Calendar className="w-4 h-4 text-primary-sage" />
                   <span>Member Since</span>
                 </div>
-                <span className="font-bold text-primary-text">Jul 2026</span>
+                <span className="font-bold text-primary-text">{memberSince}</span>
               </div>
             </div>
           </SectionCard>
@@ -173,7 +228,7 @@ export default function ProfilePage() {
                     id="profile-name"
                     type="text"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => setNameDraft(e.target.value)}
                     className={cn(
                       "w-full px-3.5 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                       "focus:outline-none focus:border-primary-sage focus:ring-2 focus:ring-primary-sage/10",
@@ -203,7 +258,7 @@ export default function ProfilePage() {
                       ? "bg-very-light-sage/40 border-light-sage/60 text-secondary-text cursor-not-allowed"
                       : "bg-very-light-sage/40 border-light-sage/60 text-primary-text font-medium"
                   )}>
-                    {email}
+                    {loading ? "Loading…" : user?.email}
                   </div>
                   {editMode && (
                     <p className="mt-1 text-[11px] text-secondary-text">
@@ -220,7 +275,7 @@ export default function ProfilePage() {
                   Member Since
                 </label>
                 <div className="px-3.5 py-2.5 rounded-[12px] bg-very-light-sage/40 border border-light-sage/60 text-sm text-primary-text font-medium">
-                  July 2026
+                  {memberSince}
                 </div>
               </div>
             </div>
@@ -267,7 +322,7 @@ export default function ProfilePage() {
               <div className="flex items-start gap-3 p-3 rounded-xl bg-very-light-sage/60 border border-light-sage text-xs text-dark-sage">
                 <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-warning" />
                 <span>
-                  Password management will be available when authentication is connected.
+                  Enter your current password to securely confirm this change.
                 </span>
               </div>
 
@@ -284,6 +339,9 @@ export default function ProfilePage() {
                     id="current-password"
                     type={showCurrentPw ? "text" : "password"}
                     placeholder="Enter current password"
+                    autoComplete="current-password"
+                    value={currentPassword}
+                    onChange={(event) => setCurrentPassword(event.target.value)}
                     className={cn(
                       "w-full px-3.5 pr-11 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                       "placeholder:text-secondary-text/50",
@@ -315,6 +373,9 @@ export default function ProfilePage() {
                     id="new-password"
                     type={showNewPw ? "text" : "password"}
                     placeholder="Min. 8 characters"
+                    autoComplete="new-password"
+                    value={newPassword}
+                    onChange={(event) => setNewPassword(event.target.value)}
                     className={cn(
                       "w-full px-3.5 pr-11 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                       "placeholder:text-secondary-text/50",
@@ -336,9 +397,16 @@ export default function ProfilePage() {
               <PrimaryButton
                 icon={<Lock className="w-4 h-4" />}
                 className="text-sm"
+                onClick={handlePasswordChange}
+                disabled={updatingPassword || !currentPassword || !newPassword}
               >
-                Update Password
+                {updatingPassword ? "Updating…" : "Update Password"}
               </PrimaryButton>
+              {passwordMessage && (
+                <p className={cn("text-xs", passwordError ? "text-[#B91C1C]" : "text-success")} role="status">
+                  {passwordMessage}
+                </p>
+              )}
             </div>
           </SectionCard>
         </div>

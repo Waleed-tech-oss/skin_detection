@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ScanFace,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { APP_CONFIG } from "@/constants";
+import { authService } from "@/services/auth";
 
 interface NavItemConfig {
   label: string;
@@ -43,6 +45,19 @@ interface AppSidebarProps {
 
 export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = React.useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await authService.signOut();
+    } finally {
+      router.replace("/login");
+      router.refresh();
+      setLoggingOut(false);
+    }
+  };
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-surface border-r border-sage-border text-primary-text">
@@ -118,13 +133,15 @@ export function AppSidebar({ isOpen = false, onClose }: AppSidebarProps) {
 
       {/* Bottom User / Logout Section */}
       <div className="p-3 border-t border-sage-border/60">
-        <Link
-          href="/login"
-          className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-secondary-text hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors group"
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="flex w-full items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-secondary-text hover:text-[#B91C1C] hover:bg-[#FEF2F2] transition-colors group"
         >
           <LogOut className="w-4 h-4 shrink-0 text-secondary-text group-hover:text-[#B91C1C] transition-colors" />
-          <span>Log out</span>
-        </Link>
+          <span>{loggingOut ? "Logging out…" : "Log out"}</span>
+        </button>
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -12,8 +14,8 @@ import {
   MOCK_ANALYSIS_HISTORY,
   MOCK_RECOMMENDED_PRODUCTS,
   MOCK_MORNING_ROUTINE,
-  MOCK_USER_PROFILE,
 } from "@/data/mockData";
+import { useAuth } from "@/components/auth/AuthProvider";
 import {
   ScanFace,
   ArrowRight,
@@ -22,11 +24,14 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
+  const { user, loading } = useAuth();
+  const greetingName = loading ? "there" : user?.name || "there";
+
   return (
     <AppShell pageTitle="Dashboard">
       {/* 1. Dashboard Header */}
       <PageHeader
-        title={`Good evening, ${MOCK_USER_PROFILE.name}`}
+        title={`Good evening, ${greetingName}`}
         description="Here is your latest skin analysis overview."
         action={
           <Link href="/analysis">

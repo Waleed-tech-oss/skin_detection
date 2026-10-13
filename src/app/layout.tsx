@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
 import "./globals.css";
 import { APP_CONFIG } from "@/constants";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -31,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${inter.variable}`}>
       <body className="min-h-screen bg-background text-primary-text font-body antialiased flex flex-col">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

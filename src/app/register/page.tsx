@@ -2,12 +2,16 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ShieldCheck, ArrowRight, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { APP_CONFIG } from "@/constants";
 import { cn } from "@/lib/utils";
+import { authService } from "@/services/auth";
+import { getAuthErrorMessage } from "@/lib/auth-errors";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [name, setName] = useState("");
@@ -15,6 +19,44 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [submissionMessage, setSubmissionMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSubmissionMessage("");
+    setIsError(false);
+    if (password.length < 8) {
+      setSubmissionMessage("Password must be at least 8 characters.");
+      setIsError(true);
+      return;
+    }
+    if (password !== confirm) {
+      setSubmissionMessage("Passwords do not match.");
+      setIsError(true);
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const session = await authService.register({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+      });
+      if (session) {
+        router.replace("/dashboard");
+        router.refresh();
+      } else {
+        setSubmissionMessage("Account created. Check your email to confirm your address, then sign in.");
+      }
+    } catch (error) {
+      setSubmissionMessage(getAuthErrorMessage(error));
+      setIsError(true);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -88,12 +130,7 @@ export default function RegisterPage() {
           {/* Register Form */}
           <form
             className="space-y-5"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSubmissionMessage(
-                "Account creation will be available when the authentication adapter is connected.",
-              );
-            }}
+            onSubmit={handleSubmit}
           >
             {/* Full Name */}
             <div className="space-y-1.5">
@@ -112,6 +149,7 @@ export default function RegisterPage() {
                   placeholder="Sarah Jenkins"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                   className={cn(
                     "w-full pl-10 pr-4 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                     "placeholder:text-secondary-text/50",
@@ -139,6 +177,7 @@ export default function RegisterPage() {
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                   className={cn(
                     "w-full pl-10 pr-4 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                     "placeholder:text-secondary-text/50",
@@ -166,6 +205,8 @@ export default function RegisterPage() {
                   placeholder="Min. 8 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  minLength={8}
+                  required
                   className={cn(
                     "w-full pl-10 pr-11 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                     "placeholder:text-secondary-text/50",
@@ -201,6 +242,8 @@ export default function RegisterPage() {
                   placeholder="Re-enter your password"
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
+                  minLength={8}
+                  required
                   className={cn(
                     "w-full pl-10 pr-11 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                     "placeholder:text-secondary-text/50",
@@ -228,16 +271,17 @@ export default function RegisterPage() {
             <div className="pt-1">
               <PrimaryButton
                 type="submit"
+                disabled={submitting}
                 fullWidth
                 icon={<ArrowRight className="w-4 h-4" />}
                 iconPosition="right"
                 className="py-3 text-[15px]"
               >
-                Create Account
+                {submitting ? "Creating Account…" : "Create Account"}
               </PrimaryButton>
             </div>
             {submissionMessage && (
-              <p className="text-xs text-secondary-text" role="status">
+              <p className={cn("text-xs", isError ? "text-[#B91C1C]" : "text-success")} role="status">
                 {submissionMessage}
               </p>
             )}

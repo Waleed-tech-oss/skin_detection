@@ -46,11 +46,12 @@ export interface PageResult<T> {
 export interface AuthService {
   getCurrentUser(): Promise<UserProfile | null>;
   signIn(credentials: AuthCredentials): Promise<AuthSession>;
-  register(input: RegistrationInput): Promise<AuthSession>;
+  register(input: RegistrationInput): Promise<AuthSession | null>;
   signOut(): Promise<void>;
   requestPasswordReset(email: string): Promise<void>;
   updateProfile(input: Pick<UserProfile, "name">): Promise<UserProfile>;
   changePassword(currentPassword: string, newPassword: string): Promise<void>;
+  updateRecoveredPassword(newPassword: string): Promise<void>;
 }
 
 export interface AnalysisService {

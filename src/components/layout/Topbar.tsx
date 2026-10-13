@@ -3,6 +3,7 @@
 import React from "react";
 import { Menu, User as UserIcon } from "lucide-react";
 import { APP_CONFIG } from "@/constants";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface TopbarProps {
   onMenuToggle?: () => void;
@@ -10,6 +11,15 @@ interface TopbarProps {
 }
 
 export function Topbar({ onMenuToggle, title }: TopbarProps) {
+  const { user, loading } = useAuth();
+  const displayName = user?.name || (loading ? "Loading…" : "Account");
+  const initials = user?.name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   return (
     <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-sage-border bg-surface/90 px-4 py-3.5 backdrop-blur-xs sm:px-6">
       {/* Left: Mobile Hamburger & Current Page / Breadcrumb */}
@@ -44,10 +54,10 @@ export function Topbar({ onMenuToggle, title }: TopbarProps) {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2.5">
           <span className="text-xs font-medium text-secondary-text hidden sm:inline-block">
-            Alex
+            {displayName}
           </span>
           <div className="w-8 h-8 rounded-full bg-light-sage text-dark-sage flex items-center justify-center font-semibold text-xs border border-primary-sage/20">
-            <UserIcon className="w-4 h-4" />
+            {initials || <UserIcon className="w-4 h-4" />}
           </div>
         </div>
       </div>

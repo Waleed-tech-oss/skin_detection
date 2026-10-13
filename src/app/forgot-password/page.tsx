@@ -7,16 +7,29 @@ import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { APP_CONFIG } from "@/constants";
 import { cn } from "@/lib/utils";
+import { authService } from "@/services/auth";
+import { getAuthErrorMessage } from "@/lib/auth-errors";
 
-type Step = "email" | "unavailable";
+type Step = "email" | "sent";
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep("unavailable");
+    setSubmitting(true);
+    setErrorMessage("");
+    try {
+      await authService.requestPasswordReset(email.trim());
+      setStep("sent");
+    } catch (error) {
+      setErrorMessage(getAuthErrorMessage(error));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -67,6 +80,7 @@ export default function ForgotPasswordPage() {
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                     className={cn(
                       "w-full pl-10 pr-4 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                       "placeholder:text-secondary-text/50",
@@ -79,13 +93,19 @@ export default function ForgotPasswordPage() {
 
               <PrimaryButton
                 type="submit"
+                disabled={submitting}
                 fullWidth
                 icon={<Send className="w-4 h-4" />}
                 iconPosition="right"
                 className="py-2.5"
               >
-                Send Reset Link
+                {submitting ? "Sending…" : "Send Reset Link"}
               </PrimaryButton>
+              {errorMessage && (
+                <p className="text-xs text-[#B91C1C]" role="alert">
+                  {errorMessage}
+                </p>
+              )}
             </form>
 
             <div className="text-center">
@@ -99,7 +119,7 @@ export default function ForgotPasswordPage() {
             </div>
           </div>
         ) : (
-          /* Integration-pending state */
+          /* Sent state */
           <div className="bg-surface rounded-[18px] border border-sage-border shadow-[0_1px_3px_0_rgba(0,0,0,0.03)] p-8 space-y-6 text-center">
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-full bg-[#EEF7F2] border border-[#CBE5D6] flex items-center justify-center">
@@ -109,10 +129,10 @@ export default function ForgotPasswordPage() {
 
             <div className="space-y-2">
               <h1 className="text-xl font-bold tracking-tight text-primary-text font-heading">
-                Reset service not connected
+                Check your email
               </h1>
               <p className="text-sm text-secondary-text leading-relaxed">
-                Password reset emails will be available after the authentication adapter is connected.
+                If an account exists for {email}, we sent a secure password reset link. The link may expire, so use it promptly.
               </p>
             </div>
 

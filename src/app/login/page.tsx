@@ -1,17 +1,50 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ShieldCheck, ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { APP_CONFIG } from "@/constants";
 import { cn } from "@/lib/utils";
+import { authService } from "@/services/auth";
+import { getAuthErrorMessage, getSafeClientRedirect } from "@/lib/auth-errors";
 
-export default function LoginPage() {
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [submissionMessage, setSubmissionMessage] = useState("");
+  const queryError = searchParams.get("error");
+  const initialMessage = queryError === "expired-link"
+    ? "This verification or recovery link is invalid or has expired. Please request a new one."
+    : queryError === "configuration"
+      ? "Supabase is not configured. Add the required values to .env.local."
+      : "";
+  const [submissionMessage, setSubmissionMessage] = useState(initialMessage);
+  const [isError, setIsError] = useState(Boolean(initialMessage));
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setSubmissionMessage("");
+    setIsError(false);
+    try {
+      await authService.signIn({ email: email.trim(), password });
+      const next = getSafeClientRedirect(
+        searchParams.get("next"),
+      );
+      router.replace(next);
+      router.refresh();
+    } catch (error) {
+      setSubmissionMessage(getAuthErrorMessage(error));
+      setIsError(true);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -85,12 +118,7 @@ export default function LoginPage() {
           {/* Login Form */}
           <form
             className="space-y-5"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setSubmissionMessage(
-                "Sign-in will be available when the authentication adapter is connected.",
-              );
-            }}
+            onSubmit={handleSubmit}
           >
             {/* Email field */}
             <div className="space-y-1.5">
@@ -109,6 +137,7 @@ export default function LoginPage() {
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                   className={cn(
                     "w-full pl-10 pr-4 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                     "placeholder:text-secondary-text/50",
@@ -144,6 +173,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                   className={cn(
                     "w-full pl-10 pr-11 py-2.5 rounded-[12px] bg-surface border border-sage-border text-sm text-primary-text",
                     "placeholder:text-secondary-text/50",
@@ -170,16 +200,17 @@ export default function LoginPage() {
             <div className="pt-1">
               <PrimaryButton
                 type="submit"
+                disabled={submitting}
                 fullWidth
                 icon={<ArrowRight className="w-4 h-4" />}
                 iconPosition="right"
                 className="py-3 text-[15px]"
               >
-                Sign In
+                {submitting ? "Signing In…" : "Sign In"}
               </PrimaryButton>
             </div>
             {submissionMessage && (
-              <p className="text-xs text-secondary-text" role="status">
+              <p className={cn("text-xs", isError ? "text-[#B91C1C]" : "text-success")} role="status">
                 {submissionMessage}
               </p>
             )}
@@ -205,5 +236,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <LoginForm />
+    </Suspense>
   );
 }
